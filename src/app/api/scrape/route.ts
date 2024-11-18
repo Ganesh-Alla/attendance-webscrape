@@ -1,3 +1,4 @@
+export const maxDuration = 60;
 import { NextRequest } from 'next/server'
 import puppeteer from "puppeteer-core";
 import chrome from '@sparticuz/chromium'
