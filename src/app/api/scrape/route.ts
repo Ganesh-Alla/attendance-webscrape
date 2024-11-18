@@ -1,13 +1,23 @@
 import { NextRequest } from 'next/server'
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
+
+import chromium from 'chrome-aws-lambda'
+
 
 async function scrapeStudentData(username: string, sendLog: (message: string) => Promise<void>) {
   let browser;
   const URL = process.env.URL as string;
   try {
     await sendLog("Launching browser...");
-    const options = { headless: true }; 
-    browser = await puppeteer.launch(options);
+    // const options = { headless: true }; 
+    // browser = await puppeteer.launch(options);
+    browser = await chromium.puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    });
     const page = await browser.newPage();
 
     await sendLog("Navigating to login page...");
