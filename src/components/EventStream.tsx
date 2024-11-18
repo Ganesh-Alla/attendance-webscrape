@@ -154,6 +154,7 @@ export default function Home() {
             >
               {isProcessing ? currentLog || 'Waiting for logs...' : 
               <>
+            {!currentLog && "Waiting for Submission..."}
           {studentName && <p className="text-blue-600 font-medium text-sm">{studentName.replace("WELCOME", "")}</p>}
           {totalPercentage && <p className="text-orange-600 font-bold text-sm">Your Attendance is {totalPercentage}</p>}
           {error && <p className="text-red-600 font-bold text-sm">{error}</p>}

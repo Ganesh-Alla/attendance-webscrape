@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 
 async function scrapeStudentData(username: string, sendLog: (message: string) => Promise<void>) {
   let browser;
-
+  const URL = process.env.URL as string;
   try {
     await sendLog("Launching browser...");
     const options = { headless: true }; 
@@ -11,7 +11,7 @@ async function scrapeStudentData(username: string, sendLog: (message: string) =>
     const page = await browser.newPage();
 
     await sendLog("Navigating to login page...");
-    await page.goto("http://43.250.40.63/Login.aspx");
+    await page.goto(URL);
 
     await sendLog("Filling in username...");
     await page.waitForSelector("#txtUserName");
@@ -22,7 +22,7 @@ async function scrapeStudentData(username: string, sendLog: (message: string) =>
 
     await sendLog("Checking for warnings...");
     try {
-      await page.waitForSelector("#lblWarning", { timeout: 2000 });
+      await page.waitForSelector("#lblWarning");
       const warningText = await page.$eval("#lblWarning", (el) => el.textContent?.trim());
       console.log("warning",warningText)
       if (warningText) {
