@@ -33,6 +33,7 @@ async function scrapeStudentData(username: string, sendLog: (message: string) =>
         };
       }
     } catch (error) {
+      console.log(error)
       await sendLog("Username valid, continuing...");
     }
 
@@ -72,13 +73,14 @@ async function scrapeStudentData(username: string, sendLog: (message: string) =>
       name,
       total_percentage: data,
     };
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (e instanceof Error) {
     await sendLog(`Error during scraping: ${e.message}`);
     if (browser) {
       await browser.close();
     }
     throw new Error(`Scraping failed for ${username}: ${e.message}`);
-  }
+  }}
 }
 
 export async function GET(req: NextRequest) {
@@ -112,8 +114,10 @@ export async function GET(req: NextRequest) {
       const result = await scrapeStudentData(query, sendLog)
       
       await writer.write(encoder.encode(`data: ${JSON.stringify({ result })}\n\n`))
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
       await sendLog(`Error: ${error.message}`)
+      }
     } finally {
       await writer.close()
     }
